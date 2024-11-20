@@ -1,11 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ShowList from './components/ShowList';
+import BookDetail from './components/BookDetail'; // 새로 추가될 컴포넌트
+import EditBookPage from './components/EditBookPage'; // 새로 추가될 컴포넌트
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
   <React.StrictMode>
-    <ShowList />
+    <Router>
+      <Routes>
+        <Route path="/" element={<ShowList />} />
+        <Route path="/list" element={<ShowList />} />
+        <Route path="/detail/:id" element={<BookDetail />} />
+        <Route path="/update/:id" element={<EditBookPage />} />
+      </Routes>
+    </Router>
   </React.StrictMode>
 );

@@ -94,6 +94,18 @@ code {
   padding: 10px 20px;
 }
 
+button:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s;
+}
+.book-card {
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

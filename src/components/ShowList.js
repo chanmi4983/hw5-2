@@ -3,6 +3,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Container, Row, Col, Button, Navbar, Nav } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom'; // React Router를 사용
 import '../index.css';
 import BookCard from './BookCard';
 import AddBookModal from './AddBookModal';
@@ -16,6 +17,7 @@ function ShowList() {
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [selectedBook, setSelectedBook] = useState(null);
+    const navigate = useNavigate(); // React Router의 navigate 함수 사용
 
     const fetchBooks = async () => {
         try {
@@ -36,6 +38,10 @@ function ShowList() {
         setShowEditModal(true);
     };
 
+    const handleViewDetails = (id) => {
+        navigate(`/detail/${id}`); // 상세 페이지로 이동
+    };
+
     const handleDelete = async (id) => {
         await axios.delete(`${apiEndpoint}/${id}`);
         fetchBooks();
@@ -45,11 +51,11 @@ function ShowList() {
         <div>
             <Navbar bg="dark" variant="dark">
                 <Container>
-                    <Navbar.Brand href="#home">Book Management</Navbar.Brand>
+                    <Navbar.Brand href="/">Book Management</Navbar.Brand>
                     <Nav className="me-auto">
-                        <Nav.Link href="#home">Home</Nav.Link>
-                        <Nav.Link href="#about">About</Nav.Link>
-                        <Nav.Link href="#contact">Contact</Nav.Link>
+                        <Nav.Link href="/list">Home</Nav.Link>
+                        <Nav.Link href="/about">About</Nav.Link>
+                        <Nav.Link href="/contact">Contact</Nav.Link>
                     </Nav>
                 </Container>
             </Navbar>
@@ -83,7 +89,12 @@ function ShowList() {
                 <Row>
                     {books.map((book) => (
                         <Col key={book.id} xs={12} md={6} lg={4}>
-                            <BookCard book={book} onEdit={handleEdit} onDelete={handleDelete} />
+                            <BookCard 
+                                book={book} 
+                                onEdit={handleEdit} 
+                                onDelete={handleDelete} 
+                                onViewDetails={() => handleViewDetails(book.id)} // 상세 보기 버튼 추가
+                            />
                         </Col>
                     ))}
                 </Row>

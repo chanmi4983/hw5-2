@@ -1,23 +1,25 @@
 import React from 'react';
-import { Button, Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 
-const BookCard = ({ book, onEdit, onDelete }) => {
+const BookCard = ({ book, onEdit, onDelete, onViewDetails }) => {
     return (
-        <Card style={{ width: '18rem', margin: '1rem' }}>
-            <Card.Img variant="top" src={book.imageUrl} alt={book.Title} />
+        <Card style={{ width: '18rem', marginBottom: '20px' }}>
             <Card.Body>
-                <Card.Title>{book.Title}</Card.Title>
-                <Card.Subtitle className="mb-2 text-muted">{book.Author}</Card.Subtitle>
+                <Card.Title>{book.title}</Card.Title>
+                <Card.Subtitle className="mb-2 text-muted">{book.author}</Card.Subtitle>
                 <Card.Text>
-                    <strong>Year:</strong> {book.Year} <br />
-                    <strong>Genre:</strong> {book.Genre} <br />
-                    <strong>Pages:</strong> {book.Pages}
+                    <strong>Year:</strong> {book.year}<br />
+                    <strong>Genre:</strong> {book.genre}<br />
+                    <strong>Pages:</strong> {book.pages}
                 </Card.Text>
-                <Button variant="warning" onClick={() => onEdit(book)} className="me-2">
-                    <i className="bi bi-pencil"></i> 
+                <Button variant="info" className="me-2" onClick={onViewDetails}>
+                    View Details
                 </Button>
-                <Button variant="danger" onClick={() => onDelete(book.id)}>
-                    <i className="bi bi-trash"></i> 
+                <Button variant="warning" className="me-2" onClick={onEdit}>
+                    Edit
+                </Button>
+                <Button variant="danger" onClick={onDelete}>
+                    Delete
                 </Button>
             </Card.Body>
         </Card>
