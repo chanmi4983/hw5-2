@@ -4,6 +4,7 @@ import { Card, Button } from 'react-bootstrap';
 const BookCard = ({ book, onEdit, onDelete, onViewDetails }) => {
     return (
         <Card style={{ width: '18rem', marginBottom: '20px' }}>
+            <Card.Img variant="top" src={book.imageUrl} alt={book.Title} />
             <Card.Body>
                 <Card.Title>{book.Title}</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">{book.author}</Card.Subtitle>
