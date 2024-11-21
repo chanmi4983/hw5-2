@@ -39,7 +39,7 @@ function ShowList() {
     };
 
     const handleViewDetails = (id) => {
-        navigate(`/detail/${id}`); // 상세 페이지로 이동
+        navigate(`/detail/${id}`); 
     };
 
     const handleDelete = async (id) => {
