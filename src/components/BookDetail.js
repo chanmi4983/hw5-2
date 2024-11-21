@@ -27,11 +27,11 @@ function BookDetail() {
 
     return (
         <div className="container my-4">
-            <h2>{book.title}</h2>
-            <p><strong>Author:</strong> {book.author}</p>
-            <p><strong>Year:</strong> {book.year}</p>
-            <p><strong>Genre:</strong> {book.genre}</p>
-            <p><strong>Pages:</strong> {book.pages}</p>
+            <h2>{book.Title}</h2>
+            <p><strong>Author:</strong> {book.Author}</p>
+            <p><strong>Year:</strong> {book.Year}</p>
+            <p><strong>Genre:</strong> {book.Genre}</p>
+            <p><strong>Pages:</strong> {book.Pages}</p>
         </div>
     );
 }
