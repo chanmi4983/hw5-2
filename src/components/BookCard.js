@@ -5,12 +5,12 @@ const BookCard = ({ book, onEdit, onDelete, onViewDetails }) => {
     return (
         <Card style={{ width: '18rem', marginBottom: '20px' }}>
             <Card.Body>
-                <Card.Title>{book.title}</Card.Title>
+                <Card.Title>{book.Title}</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">{book.author}</Card.Subtitle>
                 <Card.Text>
-                    <strong>Year:</strong> {book.year}<br />
-                    <strong>Genre:</strong> {book.genre}<br />
-                    <strong>Pages:</strong> {book.pages}
+                    <strong>Year:</strong> {book.Year}<br />
+                    <strong>Genre:</strong> {book.Genre}<br />
+                    <strong>Pages:</strong> {book.Pages}
                 </Card.Text>
                 <Button variant="info" className="me-2" onClick={onViewDetails}>
                     View Details

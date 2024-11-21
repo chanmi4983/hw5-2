@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ShowList from './components/ShowList';
-import BookDetail from './components/BookDetail'; // 새로 추가될 컴포넌트
-import EditBookPage from './components/EditBookPage'; // 새로 추가될 컴포넌트
+import BookDetail from './components/BookDetail'; 
+import EditBookPage from './components/EditBookPage'; 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 

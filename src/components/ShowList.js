@@ -3,7 +3,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Container, Row, Col, Button, Navbar, Nav } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom'; // React Router를 사용
+import { useNavigate } from 'react-router-dom'; 
 import '../index.css';
 import BookCard from './BookCard';
 import AddBookModal from './AddBookModal';
@@ -17,7 +17,7 @@ function ShowList() {
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [selectedBook, setSelectedBook] = useState(null);
-    const navigate = useNavigate(); // React Router의 navigate 함수 사용
+    const navigate = useNavigate(); 
 
     const fetchBooks = async () => {
         try {
@@ -93,7 +93,7 @@ function ShowList() {
                                 book={book} 
                                 onEdit={handleEdit} 
                                 onDelete={handleDelete} 
-                                onViewDetails={() => handleViewDetails(book.id)} // 상세 보기 버튼 추가
+                                onViewDetails={() => handleViewDetails(book.id)} 
                             />
                         </Col>
                     ))}
