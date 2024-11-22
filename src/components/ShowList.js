@@ -19,15 +19,16 @@ function ShowList() {
     const [selectedBook, setSelectedBook] = useState(null);
     const navigate = useNavigate(); 
 
-    const fetchBooks = async () => {
+    const fetchBook = async () => {
         try {
-            const response = await axios.get(apiEndpoint);
-            console.log("Books data:", response.data);
-            setBooks(response.data);
+            const response = await axios.get(`${apiEndpoint}/${id}`); // id는 문자열로 전달됨
+            setBook(response.data);
         } catch (error) {
-            console.error("Error fetching books:", error);
+            console.error("Error fetching book:", error);
+            setError("Failed to fetch book details. Please try again.");
         }
     };
+    
 
     useEffect(() => {
         fetchBooks();
