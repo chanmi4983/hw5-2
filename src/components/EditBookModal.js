@@ -5,42 +5,45 @@ import axios from 'axios';
 const apiEndpoint = "https://672971846d5fa4901b6d2b72.mockapi.io/api/books";
 
 const EditBookModal = ({ show, onHide, book, onBookUpdated }) => {
-    const [title, setTitle] = useState('');
-    const [author, setAuthor] = useState('');
-    const [year, setYear] = useState('');
-    const [genre, setGenre] = useState('');
-    const [pages, setPages] = useState('');
-    const [updateCount, setUpdateCount] = useState(0); 
+    const [formData, setFormData] = useState({
+        title: '',
+        author: '',
+        year: '',
+        genre: '',
+        pages: '',
+    });
 
     useEffect(() => {
         if (book) {
-            setTitle(book.Title);
-            setAuthor(book.Author);
-            setYear(book.Year);
-            setGenre(book.Genre);
-            setPages(book.Pages);
-            setUpdateCount(0); // 초기화
+            setFormData({
+                title: book.Title,
+                author: book.Author,
+                year: book.Year,
+                genre: book.Genre,
+                pages: book.Pages,
+            });
         }
     }, [book]);
 
     const handleFieldChange = async (field, value) => {
-        try {
-            if (field === 'title') setTitle(value);
-            if (field === 'author') setAuthor(value);
-            if (field === 'year') setYear(value);
-            if (field === 'genre') setGenre(value);
-            if (field === 'pages') setPages(value);
+        const updatedData = {
+            ...formData,
+            [field]: field === 'year' || field === 'pages' ? parseInt(value) : value,
+        };
 
+        setFormData(updatedData); // Update local state immediately
+
+        try {
+            // Update the backend
             await axios.put(`${apiEndpoint}/${book.id}`, {
-                Title: field === 'title' ? value : title,
-                Author: field === 'author' ? value : author,
-                Year: field === 'year' ? parseInt(value) : year,
-                Genre: field === 'genre' ? value : genre,
-                Pages: field === 'pages' ? parseInt(value) : pages,
+                Title: updatedData.title,
+                Author: updatedData.author,
+                Year: updatedData.year,
+                Genre: updatedData.genre,
+                Pages: updatedData.pages,
             });
 
-            // 수정 횟수 증가
-            setUpdateCount((prevCount) => prevCount + 1);
+            onBookUpdated(); // Refresh the book list in the parent component
         } catch (error) {
             console.error("Error updating field:", error);
         }
@@ -57,7 +60,7 @@ const EditBookModal = ({ show, onHide, book, onBookUpdated }) => {
                         <Form.Label>Title</Form.Label>
                         <Form.Control
                             type="text"
-                            value={title}
+                            value={formData.title}
                             onChange={(e) => handleFieldChange('title', e.target.value)}
                         />
                     </Form.Group>
@@ -65,7 +68,7 @@ const EditBookModal = ({ show, onHide, book, onBookUpdated }) => {
                         <Form.Label>Author</Form.Label>
                         <Form.Control
                             type="text"
-                            value={author}
+                            value={formData.author}
                             onChange={(e) => handleFieldChange('author', e.target.value)}
                         />
                     </Form.Group>
@@ -73,7 +76,7 @@ const EditBookModal = ({ show, onHide, book, onBookUpdated }) => {
                         <Form.Label>Year</Form.Label>
                         <Form.Control
                             type="number"
-                            value={year}
+                            value={formData.year}
                             onChange={(e) => handleFieldChange('year', e.target.value)}
                         />
                     </Form.Group>
@@ -81,7 +84,7 @@ const EditBookModal = ({ show, onHide, book, onBookUpdated }) => {
                         <Form.Label>Genre</Form.Label>
                         <Form.Control
                             type="text"
-                            value={genre}
+                            value={formData.genre}
                             onChange={(e) => handleFieldChange('genre', e.target.value)}
                         />
                     </Form.Group>
@@ -89,22 +92,18 @@ const EditBookModal = ({ show, onHide, book, onBookUpdated }) => {
                         <Form.Label>Pages</Form.Label>
                         <Form.Control
                             type="number"
-                            value={pages}
+                            value={formData.pages}
                             onChange={(e) => handleFieldChange('pages', e.target.value)}
                         />
                     </Form.Group>
                 </Form>
-                <p className="text-muted">
-                    Total Updates: <strong>{updateCount}</strong>
-                </p>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={onHide}>Close</Button>
-                <Button variant="primary" onClick={onBookUpdated}>Finish Editing</Button>
+                <Button variant="primary" onClick={onHide}>Finish Editing</Button>
             </Modal.Footer>
         </Modal>
     );
 };
 
 export default EditBookModal;
-
