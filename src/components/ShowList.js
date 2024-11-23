@@ -19,34 +19,19 @@ function ShowList() {
     const [selectedBook, setSelectedBook] = useState(null);
     const navigate = useNavigate(); 
 
-    // const fetchBooks = async () => {
-    //     try {
-    //         const response = await axios.get(apiEndpoint);
-    //         console.log("Books data:", response.data);
-    //         setBooks(response.data);
-    //     } catch (error) {
-    //         console.error("Error fetching books:", error);
-    //     }
-    // };
+    const fetchBooks = async () => {
+        try {
+            const response = await axios.get(apiEndpoint);
+            console.log("Books data:", response.data);
+            setBooks(response.data); // 상태 업데이트
+        } catch (error) {
+            console.error("Error fetching books:", error);
+        }
+    };
 
     useEffect(() => {
-        const fetchBook = async () => {
-            try {
-                const response = await axios.get(`${apiEndpoint}/${id}`);
-                setBook(response.data); 
-            } catch (error) {
-                console.error("Error fetching book:", error);
-                setError("Failed to fetch book details. Please try again.");
-            }
-        };
-
-        fetchBook();
-    }, [id]);
-
-
-    // useEffect(() => {
-    //     fetchBooks();
-    // }, []);
+        fetchBooks();
+    }, []);
 
     const handleEdit = (book) => {
         setSelectedBook(book);
@@ -58,8 +43,12 @@ function ShowList() {
     };
 
     const handleDelete = async (id) => {
-        await axios.delete(`${apiEndpoint}/${id}`);
-        fetchBooks();
+        try {
+            await axios.delete(`${apiEndpoint}/${id}`);
+            fetchBooks(); 
+        } catch (error) {
+            console.error("Error deleting book:", error);
+        }
     };
 
     return (
