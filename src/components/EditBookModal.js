@@ -12,6 +12,7 @@ const EditBookModal = ({ show, onHide, book, onBookUpdated }) => {
         genre: '',
         pages: '',
     });
+    const [updateCount, setUpdateCount] = useState(0); 
 
     useEffect(() => {
         if (book) {
@@ -22,19 +23,19 @@ const EditBookModal = ({ show, onHide, book, onBookUpdated }) => {
                 genre: book.Genre,
                 pages: book.Pages,
             });
+            setUpdateCount(0); 
         }
     }, [book]);
 
     const handleFieldChange = async (field, value) => {
-        const updatedData = {
-            ...formData,
-            [field]: field === 'year' || field === 'pages' ? parseInt(value) : value,
-        };
-
-        setFormData(updatedData); // Update local state immediately
-
         try {
-            // Update the backend
+            const updatedData = {
+                ...formData,
+                [field]: field === 'year' || field === 'pages' ? parseInt(value) : value,
+            };
+
+            setFormData(updatedData); 
+
             await axios.put(`${apiEndpoint}/${book.id}`, {
                 Title: updatedData.title,
                 Author: updatedData.author,
@@ -43,7 +44,9 @@ const EditBookModal = ({ show, onHide, book, onBookUpdated }) => {
                 Pages: updatedData.pages,
             });
 
-            onBookUpdated(); // Refresh the book list in the parent component
+            setUpdateCount((prevCount) => prevCount + 1);
+
+            onBookUpdated(); 
         } catch (error) {
             console.error("Error updating field:", error);
         }
@@ -97,6 +100,9 @@ const EditBookModal = ({ show, onHide, book, onBookUpdated }) => {
                         />
                     </Form.Group>
                 </Form>
+                <p className="text-muted">
+                    Total Updates: <strong>{updateCount}</strong>
+                </p>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={onHide}>Close</Button>
