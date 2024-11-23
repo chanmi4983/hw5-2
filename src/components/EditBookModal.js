@@ -10,6 +10,7 @@ const EditBookModal = ({ show, onHide, book, onBookUpdated }) => {
     const [year, setYear] = useState('');
     const [genre, setGenre] = useState('');
     const [pages, setPages] = useState('');
+    const [updateCount, setUpdateCount] = useState(0); 
 
     useEffect(() => {
         if (book) {
@@ -18,19 +19,31 @@ const EditBookModal = ({ show, onHide, book, onBookUpdated }) => {
             setYear(book.Year);
             setGenre(book.Genre);
             setPages(book.Pages);
+            setUpdateCount(0); // 초기화
         }
     }, [book]);
 
-    const handleSaveChanges = async () => {
-        await axios.put(`${apiEndpoint}/${book.id}`, {
-            Title: title,
-            Author: author,
-            Year: parseInt(year),
-            Genre: genre,
-            Pages: parseInt(pages),
-        });
-        onBookUpdated();
-        onHide();
+    const handleFieldChange = async (field, value) => {
+        try {
+            if (field === 'title') setTitle(value);
+            if (field === 'author') setAuthor(value);
+            if (field === 'year') setYear(value);
+            if (field === 'genre') setGenre(value);
+            if (field === 'pages') setPages(value);
+
+            await axios.put(`${apiEndpoint}/${book.id}`, {
+                Title: field === 'title' ? value : title,
+                Author: field === 'author' ? value : author,
+                Year: field === 'year' ? parseInt(value) : year,
+                Genre: field === 'genre' ? value : genre,
+                Pages: field === 'pages' ? parseInt(value) : pages,
+            });
+
+            // 수정 횟수 증가
+            setUpdateCount((prevCount) => prevCount + 1);
+        } catch (error) {
+            console.error("Error updating field:", error);
+        }
     };
 
     return (
@@ -45,7 +58,7 @@ const EditBookModal = ({ show, onHide, book, onBookUpdated }) => {
                         <Form.Control
                             type="text"
                             value={title}
-                            onChange={(e) => setTitle(e.target.value)}
+                            onChange={(e) => handleFieldChange('title', e.target.value)}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formAuthor">
@@ -53,7 +66,7 @@ const EditBookModal = ({ show, onHide, book, onBookUpdated }) => {
                         <Form.Control
                             type="text"
                             value={author}
-                            onChange={(e) => setAuthor(e.target.value)}
+                            onChange={(e) => handleFieldChange('author', e.target.value)}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formYear">
@@ -61,7 +74,7 @@ const EditBookModal = ({ show, onHide, book, onBookUpdated }) => {
                         <Form.Control
                             type="number"
                             value={year}
-                            onChange={(e) => setYear(e.target.value)}
+                            onChange={(e) => handleFieldChange('year', e.target.value)}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGenre">
@@ -69,7 +82,7 @@ const EditBookModal = ({ show, onHide, book, onBookUpdated }) => {
                         <Form.Control
                             type="text"
                             value={genre}
-                            onChange={(e) => setGenre(e.target.value)}
+                            onChange={(e) => handleFieldChange('genre', e.target.value)}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formPages">
@@ -77,17 +90,21 @@ const EditBookModal = ({ show, onHide, book, onBookUpdated }) => {
                         <Form.Control
                             type="number"
                             value={pages}
-                            onChange={(e) => setPages(e.target.value)}
+                            onChange={(e) => handleFieldChange('pages', e.target.value)}
                         />
                     </Form.Group>
                 </Form>
+                <p className="text-muted">
+                    Total Updates: <strong>{updateCount}</strong>
+                </p>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={onHide}>Close</Button>
-                <Button variant="primary" onClick={handleSaveChanges}>Save Changes</Button>
+                <Button variant="primary" onClick={onBookUpdated}>Finish Editing</Button>
             </Modal.Footer>
         </Modal>
     );
 };
 
 export default EditBookModal;
+
