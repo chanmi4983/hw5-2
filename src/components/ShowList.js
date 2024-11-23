@@ -1,17 +1,3 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import { Container, Row, Col, Button, Navbar, Nav } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom'; 
-import '../index.css';
-import BookCard from './BookCard';
-import AddBookModal from './AddBookModal';
-import EditBookModal from './EditBookModal';
-import BookCarousel from './BookCarousel';
-
-const apiEndpoint = "https://672971846d5fa4901b6d2b72.mockapi.io/api/books";
-
 function ShowList() {
     const [books, setBooks] = useState([]);
     const [showAddModal, setShowAddModal] = useState(false);
@@ -19,11 +5,12 @@ function ShowList() {
     const [selectedBook, setSelectedBook] = useState(null);
     const navigate = useNavigate(); 
 
+    // Fetch books from the API
     const fetchBooks = async () => {
         try {
             const response = await axios.get(apiEndpoint);
             console.log("Books data:", response.data);
-            setBooks(response.data); // 상태 업데이트
+            setBooks(response.data); // Update state
         } catch (error) {
             console.error("Error fetching books:", error);
         }
@@ -33,19 +20,35 @@ function ShowList() {
         fetchBooks();
     }, []);
 
+    // Handle field changes directly
+    const handleFieldChange = async (id, field, value) => {
+        try {
+            // Update server
+            const updatedBook = await axios.put(`${apiEndpoint}/${id}`, {
+                ...books.find(book => book.id === id),
+                [field]: field === 'year' || field === 'pages' ? parseInt(value) : value,
+            });
+
+            // Update local state
+            setBooks(books.map(book => (book.id === id ? updatedBook.data : book)));
+        } catch (error) {
+            console.error("Error updating field:", error);
+        }
+    };
+
     const handleEdit = (book) => {
         setSelectedBook(book);
         setShowEditModal(true);
     };
 
     const handleViewDetails = (id) => {
-        navigate(`/detail/${id}`); 
+        navigate(`/detail/${id}`);
     };
 
     const handleDelete = async (id) => {
         try {
             await axios.delete(`${apiEndpoint}/${id}`);
-            fetchBooks(); 
+            setBooks(books.filter(book => book.id !== id)); // Remove from local state
         } catch (error) {
             console.error("Error deleting book:", error);
         }
@@ -98,6 +101,7 @@ function ShowList() {
                                 onEdit={handleEdit} 
                                 onDelete={handleDelete} 
                                 onViewDetails={() => handleViewDetails(book.id)} 
+                                onFieldChange={handleFieldChange} // Pass to BookCard
                             />
                         </Col>
                     ))}
@@ -108,12 +112,10 @@ function ShowList() {
                         show={showEditModal}
                         onHide={() => setShowEditModal(false)}
                         book={selectedBook}
-                        onBookUpdated={fetchBooks}
+                        onFieldChange={handleFieldChange} // Pass to EditBookModal
                     />
                 )}
             </Container>
         </div>
     );
 }
-
-export default ShowList;
